@@ -1,0 +1,27 @@
+{
+  "class_order": [
+    "Angry",
+    "Fear",
+    "Happy",
+    "Sad",
+    "Neutral"
+  ],
+  "index_to_emotion": {
+    "0": "Angry",
+    "1": "Fear",
+    "2": "Happy",
+    "3": "Sad",
+    "4": "Neutral"
+  },
+  "fer2013_to_canonical": {
+    "0": "Angry",
+    "2": "Fear",
+    "3": "Happy",
+    "4": "Sad",
+    "6": "Neutral"
+  },
+  "fer2013_excluded": {
+    "1": "Disgust: only 547 of 35887 rows (1.5%), too few to learn reliably.",
+    "5": "Surprise: not one of the project's five target emotions; merging it into another class would mix semantically different emotions."
+  }
+}

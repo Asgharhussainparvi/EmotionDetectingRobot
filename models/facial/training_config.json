@@ -1,0 +1,47 @@
+{
+  "seed": 42,
+  "epochs_requested": 30,
+  "epochs_run": 30,
+  "batch_size": 64,
+  "optimizer": "Adam",
+  "learning_rate_initial": 0.001,
+  "early_stopping_patience": 10,
+  "smoke_run_max_samples": null,
+  "split_policy": {
+    "train": "Training",
+    "validation": "PublicTest",
+    "test": "PrivateTest (not used in this script)"
+  },
+  "train_samples": 25102,
+  "validation_samples": 3118,
+  "train_class_counts": {
+    "Angry": 3995,
+    "Fear": 4097,
+    "Happy": 7215,
+    "Sad": 4830,
+    "Neutral": 4965
+  },
+  "validation_class_counts": {
+    "Angry": 467,
+    "Fear": 496,
+    "Happy": 895,
+    "Sad": 653,
+    "Neutral": 607
+  },
+  "class_weights": {
+    "Angry": 1.2566708385481853,
+    "Fear": 1.2253844276299732,
+    "Happy": 0.6958281358281359,
+    "Sad": 1.0394202898550724,
+    "Neutral": 1.0111581067472306
+  },
+  "best_epoch_by_val_loss": 30,
+  "training_seconds": 9317.1,
+  "versions": {
+    "python": "3.12.0",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.1",
+    "numpy": "2.5.4",
+    "scikit_learn": "1.9.1"
+  }
+}
