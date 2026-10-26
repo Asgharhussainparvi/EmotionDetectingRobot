@@ -1,0 +1,83 @@
+{
+  "split": "validation",
+  "model_path": "models\\facial\\best.keras",
+  "samples": 3118,
+  "class_order": [
+    "Angry",
+    "Fear",
+    "Happy",
+    "Sad",
+    "Neutral"
+  ],
+  "accuracy": 0.5997434252726106,
+  "macro_f1": 0.5702164517718348,
+  "per_class": {
+    "Angry": {
+      "precision": 0.5121951219512195,
+      "recall": 0.5845824411134903,
+      "f1-score": 0.546,
+      "support": 467.0
+    },
+    "Fear": {
+      "precision": 0.49567099567099565,
+      "recall": 0.46169354838709675,
+      "f1-score": 0.4780793319415449,
+      "support": 496.0
+    },
+    "Happy": {
+      "precision": 0.8546712802768166,
+      "recall": 0.8279329608938547,
+      "f1-score": 0.8410896708286039,
+      "support": 895.0
+    },
+    "Sad": {
+      "precision": 0.5391304347826087,
+      "recall": 0.37978560490045943,
+      "f1-score": 0.44564240790655885,
+      "support": 653.0
+    },
+    "Neutral": {
+      "precision": 0.47613065326633164,
+      "recall": 0.6243822075782537,
+      "f1-score": 0.5402708481824662,
+      "support": 607.0
+    }
+  },
+  "confusion_matrix_rows_true_cols_pred": [
+    [
+      273,
+      42,
+      21,
+      52,
+      79
+    ],
+    [
+      72,
+      229,
+      20,
+      82,
+      93
+    ],
+    [
+      34,
+      33,
+      741,
+      12,
+      75
+    ],
+    [
+      98,
+      100,
+      37,
+      248,
+      170
+    ],
+    [
+      56,
+      58,
+      48,
+      66,
+      379
+    ]
+  ]
+}
