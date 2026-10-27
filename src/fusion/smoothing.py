@@ -187,7 +187,15 @@ class EmotionStabilizer:
         return self._snapshot(status, message)
 
     def update_fusion(self, result: FusionResult) -> StabilizedEmotion:
-        """Feed a FusionResult; a result without probabilities counts as missing."""
+        """Feed a FusionResult.
+
+        Only results in which fusion actually made a decision (emotion is not
+        None) count as observations. Uncertain, low-confidence or empty results
+        count as missing, so they can neither move the smoothed state nor be
+        reported as a stable emotion.
+        """
+        if result.emotion is None:
+            return self.update(None)
         return self.update(result.probabilities)
 
 
@@ -257,7 +265,26 @@ def main() -> None:
            ["no_data:-", "warming_up:-", "warming_up:-", "switched:Happy",
             "holding:Happy", "holding:Happy", "expired:-", "no_data:-",
             "warming_up:-", "warming_up:-", "switched:Happy"])
+    
+    unsure = fuse([
+        ModalityPrediction.available("facial", _dist("Neutral", 0.50)),
+        ModalityPrediction.available("speech", _dist("Angry", 0.50)),
+    ])
+    assert unsure.emotion is None
+    
+    stabilizer = EmotionStabilizer(config)
+    results = [stabilizer.update_fusion(unsure) for _ in range(4)]
+    _check("G undecided fusion results never create a stable emotion", results,
+           ["no_data:-"] * 4)
 
+    decided = fuse([ModalityPrediction.available("speech", _dist("Angry", 0.62))])
+    assert decided.emotion == "Angry"
+    stabilizer = EmotionStabilizer(config)
+    results = [stabilizer.update_fusion(decided)]
+    results += [stabilizer.update_fusion(unsure) for _ in range(3)]
+    _check("H one decided round, then undecided rounds (the demo case)", results,
+           ["warming_up:-", "holding:-", "holding:-", "expired:-"])
+    
     agree = fuse([
         ModalityPrediction.available("facial", happy),
         ModalityPrediction.available("speech", happy),
