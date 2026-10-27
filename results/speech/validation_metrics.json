@@ -1,0 +1,97 @@
+{
+  "split": "validation",
+  "model_path": "models\\speech\\svm.joblib",
+  "samples": 144,
+  "actors": [
+    17,
+    18,
+    19,
+    20
+  ],
+  "class_order": [
+    "Angry",
+    "Fear",
+    "Happy",
+    "Sad",
+    "Neutral"
+  ],
+  "feature_config": {
+    "sample_rate": 16000,
+    "n_mfcc": 40,
+    "n_fft": 1024,
+    "hop_length": 256,
+    "trim_top_db": 30.0
+  },
+  "decision_rule": "argmax of predict_proba",
+  "accuracy": 0.4861111111111111,
+  "macro_f1": 0.48355419478601497,
+  "per_class": {
+    "Angry": {
+      "precision": 0.625,
+      "recall": 0.78125,
+      "f1-score": 0.6944444444444444,
+      "support": 32.0
+    },
+    "Fear": {
+      "precision": 0.42424242424242425,
+      "recall": 0.4375,
+      "f1-score": 0.4307692307692308,
+      "support": 32.0
+    },
+    "Happy": {
+      "precision": 0.3333333333333333,
+      "recall": 0.21875,
+      "f1-score": 0.2641509433962264,
+      "support": 32.0
+    },
+    "Sad": {
+      "precision": 0.42857142857142855,
+      "recall": 0.46875,
+      "f1-score": 0.44776119402985076,
+      "support": 32.0
+    },
+    "Neutral": {
+      "precision": 0.6,
+      "recall": 0.5625,
+      "f1-score": 0.5806451612903226,
+      "support": 16.0
+    }
+  },
+  "confusion_matrix_rows_true_cols_pred": [
+    [
+      25,
+      2,
+      3,
+      1,
+      1
+    ],
+    [
+      6,
+      14,
+      5,
+      7,
+      0
+    ],
+    [
+      4,
+      13,
+      7,
+      7,
+      1
+    ],
+    [
+      4,
+      3,
+      6,
+      15,
+      4
+    ],
+    [
+      1,
+      1,
+      0,
+      5,
+      9
+    ]
+  ]
+}
