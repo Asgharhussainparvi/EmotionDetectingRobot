@@ -1,0 +1,63 @@
+{
+  "seed": 42,
+  "model": "SVC (rbf kernel, class_weight=balanced, probability=True)",
+  "scaler": "StandardScaler fitted on the training split only",
+  "feature_config": {
+    "sample_rate": 16000,
+    "n_mfcc": 40,
+    "n_fft": 1024,
+    "hop_length": 256,
+    "trim_top_db": 30.0
+  },
+  "grid": {
+    "C": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "gamma": [
+      "scale",
+      0.001,
+      0.01
+    ]
+  },
+  "selection_rule": "highest validation macro-F1, first grid point wins ties",
+  "chosen": {
+    "C": 100.0,
+    "gamma": 0.001
+  },
+  "validation_metrics_final_model": {
+    "accuracy": 0.4861111111111111,
+    "macro_f1": 0.48355419478601497,
+    "decision_rule": "argmax of predict_proba"
+  },
+  "split_policy": {
+    "train": "Actor_01..16",
+    "validation": "Actor_17..20",
+    "test": "Actor_21..24 (not used in this script)"
+  },
+  "train_samples": 576,
+  "validation_samples": 144,
+  "train_class_counts": {
+    "Angry": 128,
+    "Fear": 128,
+    "Happy": 128,
+    "Sad": 128,
+    "Neutral": 64
+  },
+  "validation_class_counts": {
+    "Angry": 32,
+    "Fear": 32,
+    "Happy": 32,
+    "Sad": 32,
+    "Neutral": 16
+  },
+  "total_seconds": 14.8,
+  "versions": {
+    "python": "3.12.0",
+    "scikit_learn": "1.9.1",
+    "numpy": "2.5.4",
+    "librosa": "1.0.0"
+  }
+}

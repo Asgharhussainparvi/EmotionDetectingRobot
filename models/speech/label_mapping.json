@@ -1,0 +1,28 @@
+{
+  "class_order": [
+    "Angry",
+    "Fear",
+    "Happy",
+    "Sad",
+    "Neutral"
+  ],
+  "index_to_emotion": {
+    "0": "Angry",
+    "1": "Fear",
+    "2": "Happy",
+    "3": "Sad",
+    "4": "Neutral"
+  },
+  "ravdess_to_canonical": {
+    "1": "Neutral",
+    "3": "Happy",
+    "4": "Sad",
+    "5": "Angry",
+    "6": "Fear"
+  },
+  "ravdess_excluded": {
+    "2": "Calm: a distinct low-arousal emotion; merging it into Neutral would mix semantically different labels.",
+    "7": "Disgust: not one of the project's five target emotions.",
+    "8": "Surprised: not one of the project's five target emotions."
+  }
+}
