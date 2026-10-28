@@ -1,4 +1,4 @@
-"""Console demo: real camera and microphone -> fusion -> smoothing.
+"""Console demo: real camera and microphone -> fusion -> smoothing -> robot.
 
 Each round (press Enter) lasts --seconds. During a round the microphone is
 recorded and, at the same time, webcam frames are classified; the facial
@@ -8,7 +8,8 @@ which a face was found. The speech result comes from the recording (or from
 
 The report names the modalities that contributed to the final decision and
 those that were excluded, with the reason. Missing sensors are reported, never
-silently ignored.
+silently ignored. The simulated robot answers only when the stabilized emotion
+justifies it (see src/robot/selector.py); no hardware is driven.
 
 Privacy: frames and recordings stay in memory and are never saved.
 
@@ -43,6 +44,8 @@ from src.fusion.adapters import (
 )
 from src.fusion.fuse import DEFAULT_WEIGHTS, DisagreementPolicy, FusionConfig, FusionResult, fuse
 from src.fusion.smoothing import EmotionStabilizer, StabilizedEmotion, StabilizerConfig
+from src.robot.output import ConsoleRobot
+from src.robot.selector import ResponseSelector, Selection, SelectorConfig
 from src.speech.features import extract_features
 from src.speech.microphone import prepare_waveform
 from src.speech.predict import DEFAULT_MODEL_DIR as SPEECH_MODEL_DIR
@@ -169,6 +172,14 @@ def print_report(
         print(f"         {stabilized.message}")
 
 
+def report_robot(selection: Selection, robot: ConsoleRobot) -> None:
+    """Show the robot's response, or say why it stays silent this round."""
+    if selection.response is None:
+        print(f"robot  : silent ({selection.reason})")
+        return
+    robot.perform(selection.response)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Console demo of the emotion pipeline.")
     parser.add_argument("--seconds", type=float, default=DEFAULT_SECONDS,
@@ -186,6 +197,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-consecutive", type=int,
                         default=StabilizerConfig().min_consecutive,
                         help="Rounds a new emotion must lead before it is adopted.")
+    parser.add_argument("--response-cooldown", type=int,
+                        default=SelectorConfig().min_updates_between_responses,
+                        help="Minimum rounds between two robot responses.")
+    parser.add_argument("--silent-neutral", action="store_true",
+                        help="The robot does not answer a stable Neutral emotion.")
     parser.add_argument("--facial-model-dir", type=Path, default=FACIAL_MODEL_DIR)
     parser.add_argument("--speech-model-dir", type=Path, default=SPEECH_MODEL_DIR)
     args = parser.parse_args()
@@ -194,6 +210,8 @@ def parse_args() -> argparse.Namespace:
         parser.error(f"--seconds must be between {MIN_SECONDS} and {MAX_SECONDS}")
     if args.min_consecutive < 1:
         parser.error("--min-consecutive must be at least 1")
+    if args.response_cooldown < 0:
+        parser.error("--response-cooldown must be 0 or more")
     if args.audio is not None and not args.audio.is_file():
         parser.error(f"audio file not found: {args.audio}")
     if args.no_camera and args.no_mic and args.audio is None:
@@ -235,10 +253,17 @@ def main() -> int:
 
     fusion_config = FusionConfig(disagreement_policy=DisagreementPolicy(args.policy))
     stabilizer = EmotionStabilizer(StabilizerConfig(min_consecutive=args.min_consecutive))
+    selector = ResponseSelector(SelectorConfig(
+        min_updates_between_responses=args.response_cooldown,
+        silent_emotions=frozenset({"Neutral"}) if args.silent_neutral else frozenset(),
+    ))
+    robot = ConsoleRobot()
 
     print("Privacy: camera frames and microphone recordings stay in memory and are NOT saved.")
     print(f"Fusion weights {DEFAULT_WEIGHTS} (untuned placeholders), policy: {args.policy}")
-    print(f"Stable emotion needs {args.min_consecutive} consecutive leading round(s).")
+    print(f"Stable emotion needs {args.min_consecutive} consecutive leading round(s); "
+          f"robot cooldown {args.response_cooldown} round(s).")
+    print("The robot is simulated (console only); no hardware is driven.")
     print("Predictions are uncertain inferences, not proof of how a person feels.")
 
     round_number = 0
@@ -297,10 +322,12 @@ def main() -> int:
             print_report(
                 round_number, facial, facial_detail, speech, speech_detail, result, stabilized
             )
+            report_robot(selector.update(stabilized), robot)
     finally:
         sd.stop()
         if capture is not None:
             capture.release()
+        robot.stop()
     return 0
 
 
